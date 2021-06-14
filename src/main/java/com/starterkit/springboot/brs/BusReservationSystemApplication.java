@@ -23,7 +23,7 @@ public class BusReservationSystemApplication {
     public static void main(String[] args) {
         SpringApplication.run(BusReservationSystemApplication.class, args);
     }
-
+    /*
     @Bean
     CommandLineRunner init(RoleRepository roleRepository, UserRepository userRepository,
                            StopRepository stopRepository, AgencyRepository agencyRepository,
@@ -159,6 +159,10 @@ public class BusReservationSystemApplication {
                         .setAvailableSeats(trip.getBus().getCapacity());
                 tripScheduleRepository.save(tripSchedule);
             }
+
         };
     }
+    */
+
+
 }

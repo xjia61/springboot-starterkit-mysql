@@ -18,11 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static com.starterkit.springboot.brs.exception.EntityType.*;
+import static com.starterkit.springboot.brs.exception.EntityType.TRIPSTOP;
 import static com.starterkit.springboot.brs.exception.ExceptionType.*;
 
 /**
@@ -44,6 +46,9 @@ public class BusReservationServiceImpl implements BusReservationService {
 
     @Autowired
     private TripRepository tripRepository;
+
+    @Autowired
+    private TripStopRepository tripStopRepository;
 
     @Autowired
     private TripScheduleRepository tripScheduleRepository;
@@ -226,6 +231,30 @@ public class BusReservationServiceImpl implements BusReservationService {
             throw exception(STOP, ENTITY_NOT_FOUND, tripDto.getDestinationStopCode());
         }
         throw exception(STOP, ENTITY_NOT_FOUND, tripDto.getSourceStopCode());
+    }
+
+    /**
+     * Creates zero-to-multiple entries of tripId and stopCode in TripStop entity,
+     * given a list of tripStopDto object
+     * @Param tripStopDtoList
+     * @return
+     */
+    public void addTripStopList(List<TripStopDto> tripStopDtoList) {
+        tripStopDtoList.stream().forEach(tripStopDto -> {
+            Trip trip = tripRepository.findById(tripStopDto.getTripId()).get();
+            if (trip == null) {
+                throw exception(TRIPSTOP, ENTITY_NOT_FOUND, "");
+            }
+            Stop stop = getStop(tripStopDto.getStopCode());
+            if (stop == null) {
+                throw exception(TRIPSTOP, ENTITY_NOT_FOUND, "");
+            }
+
+            TripStop tripStop = new TripStop()
+                    .setTrip(trip)
+                    .setStop(stop);
+            tripStopRepository.save(tripStop);
+        });
     }
 
     /**

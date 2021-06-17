@@ -11,5 +11,6 @@ public enum EntityType {
     STOP,
     TICKET,
     TRIP,
+    TRIPSTOP,
     TRIPSCHEDULE
 }

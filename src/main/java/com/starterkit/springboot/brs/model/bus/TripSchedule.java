@@ -35,4 +35,6 @@ public class TripSchedule {
 
     @Column(name = "available_seats")
     private int availableSeats;
+
+
 }

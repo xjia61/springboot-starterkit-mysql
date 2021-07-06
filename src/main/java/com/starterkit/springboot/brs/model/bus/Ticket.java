@@ -31,6 +31,7 @@ public class Ticket {
     @Column(name = "journey_date")
     private String journeyDate;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_schedule_id")
     private TripSchedule tripSchedule;

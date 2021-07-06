@@ -54,6 +54,9 @@ public class BusReservationServiceImpl implements BusReservationService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private Balance balance;
+
     /**
      * Retruns all the available stops in the database.
      *
@@ -338,21 +341,31 @@ public class BusReservationServiceImpl implements BusReservationService {
         if (user != null) {
             Optional<TripSchedule> tripSchedule = tripScheduleRepository.findById(tripScheduleDto.getId());
             if (tripSchedule.isPresent()) {
-                Ticket ticket = new Ticket()
-                        .setCancellable(false)
-                        .setJourneyDate(tripSchedule.get().getTripDate())
-                        .setPassenger(user)
-                        .setTripSchedule(tripSchedule.get())
-                        .setSeatNumber(tripSchedule.get().getTripDetail().getBus().getCapacity() - tripSchedule.get().getAvailableSeats());
-                ticketRepository.save(ticket);
-                tripSchedule.get().setAvailableSeats(tripSchedule.get().getAvailableSeats() - 1); //reduce availability by 1
-                tripScheduleRepository.save(tripSchedule.get());//update schedule
-                return TicketMapper.toTicketDto(ticket);
+                if(user.getBalance()< tripScheduleDto.getFare()){
+                    Ticket ticket = new Ticket()
+                            .setCancellable(false)
+                            .setJourneyDate(tripSchedule.get().getTripDate())
+                            .setPassenger(user)
+                            .setTripSchedule(tripSchedule.get())
+                            .setSeatNumber(tripSchedule.get().getTripDetail().getBus().getCapacity() - tripSchedule.get().getAvailableSeats());
+                    ticketRepository.save(ticket);
+                    tripSchedule.get().setAvailableSeats(tripSchedule.get().getAvailableSeats() - 1); //reduce availability by 1
+                    tripScheduleRepository.save(tripSchedule.get());//update schedule
+                    user.setBalance(user.getBalance()-tripScheduleDto.getFare());
+                    userRepository.save(user);
+                    return TicketMapper.toTicketDto(ticket);
+
+                }
+                throw exceptionWithId(USER,ENTITY_EXCEPTION,user.getBalance());
+
+
             }
             throw exceptionWithId(TRIP, ENTITY_NOT_FOUND, 2, tripScheduleDto.getTripId().toString(), tripScheduleDto.getTripDate());
         }
         throw exception(USER, ENTITY_NOT_FOUND, userDto.getEmail());
     }
+
+
 
     /**
      * Search for all Trips between src and dest stops

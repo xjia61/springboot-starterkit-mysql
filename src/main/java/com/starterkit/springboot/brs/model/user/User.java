@@ -41,6 +41,8 @@ public class User {
 
     @Column(name = "mobile_number")
     private String mobileNumber;
+    @Column(name = "balance")
+    private int balance;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",

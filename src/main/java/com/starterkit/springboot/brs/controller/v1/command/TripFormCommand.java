@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 /**
  * Created by Arpit Khandelwal.
@@ -17,6 +18,10 @@ public class TripFormCommand {
 
     @NotBlank
     private String destinationStop;
+
+    private String middleStop1;
+
+    private String middleStop2;
 
     @NotBlank
     private String busCode;

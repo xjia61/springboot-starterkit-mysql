@@ -2,6 +2,7 @@ package com.starterkit.springboot.brs.service;
 
 import com.starterkit.springboot.brs.dto.model.bus.*;
 import com.starterkit.springboot.brs.dto.model.user.UserDto;
+import com.starterkit.springboot.brs.model.bus.Trip;
 
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,8 @@ public interface BusReservationService {
     TripDto getTripById(Long tripID);
 
     List<TripDto> addTrip(TripDto tripDto);
+
+    void addTripStopList(List<TripStopDto> tripStopDtoList);
 
     List<TripDto> getAgencyTrips(String agencyCode);
 

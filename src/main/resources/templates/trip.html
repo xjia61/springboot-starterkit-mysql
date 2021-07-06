@@ -95,8 +95,39 @@
                                     </option>
                                 </select>
                             </div>
-                            <small class="text-danger-padded" th:if="${#fields.hasErrors('sourceStop')}" th:errors="*{sourceStop}"></small>
+                            <!--                            <small class="text-danger-padded" th:if="${#fields.hasErrors('sourceStop')}" th:errors="*{sourceStop}"></small>-->
                         </div>
+
+
+                        <div class="form-group">
+                            <label for="middleStop1" th:field="*{middleStop1}" class="col-md-12">Middle Stop 1</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="middleStop1" name="middleStop1">
+                                    <option th:each="stop : ${stops}"
+                                            th:value="${stop.code}"
+                                            th:text="${stop.name}"
+                                            th:selected="${stop.code == tripFormData.middleStop1}">
+                                    </option>
+                                </select>
+                            </div>
+                            <small class="text-danger-padded" th:if="${#fields.hasErrors('middleStop1')}" th:errors="*{middleStop1}"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="middleStop2" th:field="*{middleStop2}" class="col-md-12">Middle Stop 2</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="middleStop2" name="middleStop2">
+                                    <option th:each="stop : ${stops}"
+                                            th:value="${stop.code}"
+                                            th:text="${stop.name}"
+                                            th:selected="${stop.code == tripFormData.middleStop2}">
+                                    </option>
+                                </select>
+                            </div>
+                            <small class="text-danger-padded" th:if="${#fields.hasErrors('middleStop2')}" th:errors="*{middleStop2}"></small>
+                        </div>
+
+
                         <div class="form-group">
                             <label for="destinationStop" th:field="*{destinationStop}" class="col-md-12">Destination Stop</label>
                             <div class="col-md-12">

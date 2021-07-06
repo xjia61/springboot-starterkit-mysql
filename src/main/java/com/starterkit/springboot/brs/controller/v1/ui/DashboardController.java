@@ -1,11 +1,9 @@
 package com.starterkit.springboot.brs.controller.v1.ui;
 
 import com.starterkit.springboot.brs.controller.v1.command.*;
-import com.starterkit.springboot.brs.dto.model.bus.AgencyDto;
-import com.starterkit.springboot.brs.dto.model.bus.BusDto;
-import com.starterkit.springboot.brs.dto.model.bus.StopDto;
-import com.starterkit.springboot.brs.dto.model.bus.TripDto;
+import com.starterkit.springboot.brs.dto.model.bus.*;
 import com.starterkit.springboot.brs.dto.model.user.UserDto;
+import com.starterkit.springboot.brs.model.bus.Trip;
 import com.starterkit.springboot.brs.service.BusReservationService;
 import com.starterkit.springboot.brs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -152,7 +151,25 @@ public class DashboardController {
                         .setJourneyTime(tripFormCommand.getTripDuration())
                         .setFare(tripFormCommand.getTripFare())
                         .setAgencyCode(agencyDto.getCode());
-                busReservationService.addTrip(tripDto);
+                List<TripDto> tripDtoList = busReservationService.addTrip(tripDto);
+
+                List<TripStopDto> tripFromStopDtoList = new ArrayList<>();
+                tripFromStopDtoList.add(new TripStopDto()
+                        .setTripId(tripDtoList.get(0).getId())
+                        .setStopCode(tripFormCommand.getMiddleStop1()));
+                tripFromStopDtoList.add(new TripStopDto()
+                        .setTripId(tripDtoList.get(0).getId())
+                        .setStopCode(tripFormCommand.getMiddleStop2()));
+                busReservationService.addTripStopList(tripFromStopDtoList);
+
+                List<TripStopDto> tripToStopDtoList = new ArrayList<>();
+                tripToStopDtoList.add(new TripStopDto()
+                        .setTripId(tripDtoList.get(1).getId())
+                        .setStopCode(tripFormCommand.getMiddleStop2()));
+                tripToStopDtoList.add(new TripStopDto()
+                        .setTripId(tripDtoList.get(1).getId())
+                        .setStopCode(tripFormCommand.getMiddleStop1()));
+                busReservationService.addTripStopList(tripToStopDtoList);
 
                 trips = busReservationService.getAgencyTrips(agencyDto.getCode());
                 modelAndView.addObject("trips", trips);
